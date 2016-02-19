@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<title>Roll!</title>
+
+	<style type="text/css">
+	.RollSetBox {
+		display: none;
+	}
+	</style>
+</head>
+<body>
+	<div class="startDiv">
+		输入需要随机的数量
+		<input class="startInput" type="text">
+		<input class="startButton" type="button" value="确定">
+	</div>
+	<br/>
+	<div class="RollSetBox"></div>
+
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript">
+$(function(){
+	var xxx;
+	var startNumber;
+	var x = 0;
+	var RollString = [];
+	$('.startButton').click(function(){
+		if ($(this).val() == '确定') {
+			start();
+			$('.RollSetBox').show();
+			$(this).val('重新开始');
+		}else{
+			$('.RollSetBox').empty();
+			start();
+		}
+	})
+});
+
+function start(){
+	RollString = [];
+	x = 0;
+	startNumber = parseInt($('.startInput').val());
+	$("<div>在这里输入每个随机变量的名字（可以忽略）</div><br/>").appendTo('.RollSetBox');
+	for (var i = 1; i <= startNumber; i++){
+		$("<div>请输入第" + i + "个随机变量名<input type='text'></div>")
+			.addClass('RollSet' + i).appendTo('.RollSetBox');
+	}
+	$("<br/><input type='text'>").addClass('Roll').appendTo('.RollSetBox');
+	$("<input type='button' value='ROLL'>").click(Roll).addClass('RollButton').appendTo('.RollSetBox');
+}
+
+function Roll(){
+	if ($('.RollButton').val() == 'ROLL'){
+		RollString = [];
+		for (var i = 1; i <= startNumber; i++){
+			RollString.push($('.RollSet' + i).find('input').val());
+		}
+		$('.RollButton').val('STOP')
+		xxx = window.setInterval(Rolling, 100);
+	}else{
+		xxx =window.clearInterval(xxx);
+		$('.RollButton').val('ROLL');
+	}
+}
+
+function Rolling(){
+	$('.Roll').val('第'+ (x + 1) + '个：' +RollString[x]);
+	if (x < startNumber - 1){x += 1} else {x = 0};
+}
+</script>
+</body>
+</html>

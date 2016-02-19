@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>老司机开车啦</title>
+	<style type="text/css">
+	#code {
+		width: 1000px;
+		height: 200px;
+	}
+	#run {
+		width: 1000px;
+		height: 200px;
+	}
+	</style>
+</head>
+<body>
+	<form>
+		<input type="text" id="code0" placeholder="输入0的代表字符" />
+		<input type="text" id="code1" placeholder="输入1的代表字符"/>
+		<br/>
+		<br/>
+		<textarea type="text" id="code" raw="10" placeholder="把车交出来！"/></textarea>
+		<input type="button" value="开车啦！" onclick="drive()">
+		<br/>
+		<br/>
+		<textarea type="text" id="run" raw="10" placeholder="我要开车！"/></textarea>
+		<input type="button" value="老司机走起！" onclick="go()">
+	</form>
+
+
+	<script type="text/javascript">
+	function drive(){
+		var code0 = document.getElementById("code0").value;
+		var code1 = document.getElementById("code1").value;
+		var codeOrigin = document.getElementById("code").value;
+		var code = decoding(codeOrigin,code0,code1).replace(/ /g,"");
+		var x = 7;
+		if (code.length > 320){
+			if (code.length  % 7 == 0){
+			code = code.substring(140);
+			}else if (code.length % 8 == 0){
+			code = code.substring(160);
+			x = 8;
+			}
+		}
+
+		var answer = "";
+
+		for (var i = 0; i <= ((code.length-1) / x ); i++){
+			var a = Number(code.slice(i * x, i * x + x));
+			a = parseInt(a,2);
+			answer += String.fromCharCode(a);
+		}
+
+
+		document.getElementById("code").value = "您的目的地是：magnet:?xt=urn:btih:" + answer;
+
+	};
+
+	function go(){
+		var code0 = document.getElementById("code0").value;
+		var code1 = document.getElementById("code1").value;
+		var codeOrigin = document.getElementById("run").value;
+		var code = Array();
+		document.getElementById("run").value = "我的车牌号： ";
+		for (var i = 0; i < codeOrigin.length; i++){
+			code[i] = codeOrigin.charCodeAt(i).toString(2);
+			if (code[i].length < 8){
+				var x = code[i].length;
+				var stringx = "";
+				for (var b = 0; b < 8 - x; b++){
+					stringx += "0";
+				};
+				code[i] = stringx.concat(code[i]);
+
+			}
+			code[i] = coding(code[i],code0,code1);
+			document.getElementById("run").value += code[i];
+		}
+
+
+	};
+
+	function decoding(code,code0,code1){
+		code = code.replace(new RegExp(code1,"g"),"1");
+		code = code.replace(new RegExp(code0,"g"),"0");
+		return code;
+	}
+
+	function coding(code,code0,code1){
+		code = code.replace(/1/g,code1);
+		code = code.replace(/0/g,code0);
+		return code;
+	}
+	</script>
+</body>
+</html>
